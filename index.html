@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FARMAPED - Loja Veterinária | Catálogo Digital</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            farmaped: {
+              DEFAULT: '#008748',
+              dark: '#006b38',
+              light: '#00a357',
+              bg: '#f0fdf4'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 pb-12">
+
+  <header class="bg-farmaped text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="bg-white text-farmaped w-10 h-10 rounded-md flex items-center justify-center font-bold text-xl shadow-sm">
+          <i class="fa-solid fa-cross"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl font-black tracking-wider leading-none">FARMAPED</h1>
+          <p class="text-[10px] tracking-widest text-emerald-100 uppercase font-medium">Loja Veterinária</p>
+        </div>
+      </div>
+
+      <a href="https://wa.me/5575981952900" target="_blank" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-xs md:text-sm font-bold flex items-center shadow transition">
+        <i class="fa-brands fa-whatsapp text-lg mr-1.5"></i> Falar Conosco
+      </a>
+    </div>
+  </header>
+
+  <section class="bg-farmaped-dark text-white py-6 px-4 text-center">
+    <div class="max-w-xl mx-auto">
+      <h2 class="text-lg md:text-xl font-bold mb-1">Produtos Veterinários & Linha Agrícola</h2>
+      <p class="text-xs md:text-sm text-emerald-100">Consulte nosso catálogo e faça seu pedido direto pelo WhatsApp!</p>
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 mt-6">
+    <div class="relative">
+      <input type="text" id="campo-busca" oninput="executarFiltros()" placeholder="Buscar produto por nome ou descrição..." class="w-full bg-white border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-sm shadow-sm focus:outline-none focus:border-farmaped focus:ring-1 focus:ring-farmaped transition">
+      <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 mt-4">
+    <div class="flex space-x-2 overflow-x-auto pb-2 scrollbar-none" id="lista-filtros">
+      <button onclick="selecionarCategoria('todos', this)" class="btn-filtro active bg-farmaped text-white border border-farmaped px-4 py-1.5 rounded-full text-sm font-semibold shadow-sm transition">Todos</button>
+      <button onclick="selecionarCategoria('medicamentos', this)" class="btn-filtro bg-white border border-gray-200 hover:bg-farmaped-bg text-gray-700 px-4 py-1.5 rounded-full text-sm font-medium shadow-sm transition">Medicamentos</button>
+      <button onclick="selecionarCategoria('bovinos', this)" class="btn-filtro bg-white border border-gray-200 hover:bg-farmaped-bg text-gray-700 px-4 py-1.5 rounded-full text-sm font-medium shadow-sm transition">Bovinos & Equinos</button>
+      <button onclick="selecionarCategoria('pets', this)" class="btn-filtro bg-white border border-gray-200 hover:bg-farmaped-bg text-gray-700 px-4 py-1.5 rounded-full text-sm font-medium shadow-sm transition">Cães & Gatos</button>
+      <button onclick="selecionarCategoria('racao', this)" class="btn-filtro bg-white border border-gray-200 hover:bg-farmaped-bg text-gray-700 px-4 py-1.5 rounded-full text-sm font-medium shadow-sm transition">Rações</button>
+    </div>
+  </section>
+
+  <main class="max-w-4xl mx-auto px-4 mt-6">
+    <div id="grid-produtos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+  </main>
+
+  <script>
+    const whatsappNumero = "5575981952900";
+    let categoriaAtual = "todos";
+
+    const produtos = [
+      {
+        id: 1,
+        categoria: "bovinos",
+        categoriaNome: "Bovinos & Equinos",
+        nome: "Diclopen 10 Milhões",
+        descricao: "Antimicrobiano e anti-inflamatório indicado para infecções em bovinos e equinos (JA Saúde Animal).",
+        preco: 45.00,
+        img: "img/Diclopen.png"
+      },
+      {
+        id: 2,
+        categoria: "bovinos",
+        categoriaNome: "Equídeos / Cavalos",
+        nome: "Equivet Gold Pasta 6,42g",
+        descricao: "Vermífugo oral de amplo espectro à base de Ivermectina com seringa dosadora para equídeos.",
+        preco: 14.00,
+        img: "img/Equivet Gold.png"
+      },
+      {
+        id: 3,
+        categoria: "pets",
+        categoriaNome: "Cães & Gatos",
+        nome: "Chemitril Injetável 2,5% (20 ml)",
+        descricao: "Antibiótico de amplo espectro à base de Enrofloxacino para tratamento de infecções em pets.",
+        preco: 25.00,
+        img: "img/Chemitril.png"
+      },
+      {
+        id: 4,
+        categoria: "racao",
+        categoriaNome: "Rações",
+        nome: "Ração Special Dog Adultos 15kg",
+        descricao: "Alimento completo e balanceado para cães adultos com ômegas 3 e 6.",
+        preco: 18.00,
+        img: "img/Ração Whiskas Carne 1 Anos Para Gatos Castrados.png"
+      },
+      {
+        id: 4,
+        categoria: "racao",
+        categoriaNome: "Rações",
+        nome: "Ração Pedigree 10kg",
+        descricao: "Ração Premium 100% completa e balanceada para cães adultos.",
+        preco: 180.00,
+        img: "img/Racao-Pedigree-Caes-Adultos-Racas-Medias-e-Grandes-Carne-e-Vegetais-10.1kg-1.png"
+      },
+      {
+        id: 5,
+        categoria: "pets",
+        categoriaNome: "Cães & Gatos",
+        nome: "Antipulgas Bravecto 10 a 20kg",
+        descricao: "Comprimido mastigável para proteção contra pulgas e carrapatos por até 12 semanas.",
+        preco: 210.00,
+        img: "img/Antipulgas Bravecto 10 a 20kg.png"
+      },
+      {
+        id: 6,
+        categoria: "pets",
+        categoriaNome: "Cães & Gatos",
+        nome: "Shampoo Neutro Pet 500ml",
+        descricao: "Higiene diária com formulação suave para cães e gatos de todas as raças.",
+        preco: 28.00,
+        img: "img/Shampoo Neutro Sanol - 500Ml.png"
+      },
+      {
+        id: 7,
+        categoria: "medicamentos",
+        categoriaNome: "Medicamentos",
+        nome: "Vermífugo Drontal Plus Cães 10kg",
+        descricao: "Antiparasitário de amplo espectro indicado para o tratamento e controle de vermes intestinais em cães.",
+        preco: 42.90,
+        img: "img/Vermífugo Drontal Plus Cães 10kg.png"
+      },
+      {
+        id: 8,
+        categoria: "medicamentos",
+        categoriaNome: "Medicamentos",
+        nome: "Anti-inflamatório Meloxicam 1mg",
+        descricao: "Indicado para o alívio da dor e inflamação em patologias agudas ou crônicas associadas ao sistema osteoarticular.",
+        preco: 70.00,
+        img: "img/Anti-inflamatório Meloxicam 1mg.png"
+      }
+    ];
+
+    function renderizarProdutos(lista) {
+      const container = document.getElementById("grid-produtos");
+      container.innerHTML = "";
+
+      if (lista.length === 0) {
+        container.innerHTML = `<p class="col-span-full text-center text-gray-500 py-8">Nenhum produto encontrado.</p>`;
+        return;
+      }
+
+      lista.forEach(p => {
+        const precoFormatado = p.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        
+        container.innerHTML += `
+          <div data-categoria="${p.categoria}" class="card-produto bg-white rounded-xl shadow-sm overflow-hidden flex flex-col justify-between border border-gray-100 hover:shadow-md transition">
+            <div>
+              <div class="h-48 bg-white p-4 flex items-center justify-center border-b border-gray-50">
+                <img src="${p.img}" alt="${p.nome}" class="h-full object-contain">
+              </div>
+              <div class="p-4">
+                <span class="text-[10px] font-bold text-farmaped uppercase tracking-wider bg-emerald-100 px-2 py-0.5 rounded">${p.categoriaNome}</span>
+                <h3 class="text-base font-bold text-gray-800 mt-2">${p.nome}</h3>
+                <p class="text-xs text-gray-500 mt-1">${p.descricao}</p>
+                <p class="text-lg font-extrabold text-farmaped mt-3">${precoFormatado}</p>
+              </div>
+            </div>
+            <div class="p-4 pt-0">
+              <button onclick="comprarWhatsApp('${p.nome}', '${precoFormatado}')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center shadow text-sm transition">
+                <i class="fa-brands fa-whatsapp text-lg mr-2"></i> Pedir no WhatsApp
+              </button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function selecionarCategoria(categoria, elemento) {
+      categoriaAtual = categoria;
+
+      const botoes = document.querySelectorAll('.btn-filtro');
+      botoes.forEach(btn => {
+        btn.classList.remove('bg-farmaped', 'text-white', 'border-farmaped', 'font-semibold');
+        btn.classList.add('bg-white', 'border-gray-200', 'text-gray-700', 'font-medium');
+      });
+
+      elemento.classList.remove('bg-white', 'border-gray-200', 'text-gray-700', 'font-medium');
+      elemento.classList.add('bg-farmaped', 'text-white', 'border-farmaped', 'font-semibold');
+
+      executarFiltros();
+    }
+
+    function executarFiltros() {
+      const termoBusca = document.getElementById("campo-busca").value.toLowerCase().trim();
+
+      const resultado = produtos.filter(p => {
+        const bateCategoria = (categoriaAtual === "todos" || p.categoria === categoriaAtual);
+        const bateTexto = p.nome.toLowerCase().includes(termoBusca) || p.descricao.toLowerCase().includes(termoBusca);
+        return bateCategoria && bateTexto;
+      });
+
+      renderizarProdutos(resultado);
+    }
+
+    function comprarWhatsApp(produtoNome, precoFormatado) {
+      const mensagem = `Olá! Vi o produto *${produtoNome}* (${precoFormatado}) no catálogo da *FARMAPED* e gostaria de saber sobre disponibilidade.`;
+      const url = `https://api.whatsapp.com/send?phone=${whatsappNumero}&text=${encodeURIComponent(mensagem)}`;
+      window.open(url, '_blank');
+    }
+
+    renderizarProdutos(produtos);
+  </script>
+</body>
+</html>
